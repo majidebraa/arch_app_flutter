@@ -5,6 +5,7 @@ This application implements the following concepts:
   * MVVM
   * Multi-modules
   * ViewModel
+  * REST API with Request
   * Provider
-  * Request
+  * GetX 
 
