@@ -1,12 +1,12 @@
 import 'package:arch_app_flutter/common/app_bar_main_widget.dart';
 import 'package:arch_app_flutter/constant/app_colors.dart';
 import 'package:arch_app_flutter/core/extension/context_extension.dart';
+import 'package:arch_app_flutter/data/shared_object.dart';
 import 'package:arch_app_flutter/features/detail/detail_page.dart';
 import 'package:arch_app_flutter/features/home/user_list_view_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import '../../constant/app_strings.dart';
-import '../../data/local/local_data.dart';
 import '../../data/model/user.dart';
 import '../../data/remote/api_response.dart';
 import 'home_view_model.dart';
@@ -19,6 +19,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final HomeViewModel homeViewModel = Get.put(
+      HomeViewModel(
+          userRepository: SharedObject.sharedObject.userRepository,
+          localData: SharedObject.sharedObject.localData
+      )
+  );
   List<User>? userList = [];
 
   @override
@@ -26,22 +32,24 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding
         .instance
         .addPostFrameCallback((_){
-      context.read<HomeViewModel>().getUsersList();
+      homeViewModel.getUsersList();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    ApiResponse apiResponse = context.watch<HomeViewModel>().response;
     return Scaffold(
         backgroundColor: AppColors.whiteColor,
         appBar: const AppBarMainWidget(title: AppStrings.appName,),
-        body: usersUI(apiResponse)
+        body: Obx((){
+          return usersUI(homeViewModel.response.value);
+        })
     );
   }
 
   Widget usersUI(ApiResponse apiResponse){
+    
     userList = apiResponse.data as List<User>?;
     switch (apiResponse.status) {
       case Status.initial:
@@ -50,7 +58,7 @@ class _HomePageState extends State<HomePage> {
       case Status.completed:
         return RefreshIndicator(
           onRefresh: () {
-            return context.read<HomeViewModel>().getUsersList();
+            return homeViewModel.getUsersList();
           },
           child: Builder(builder: (context) => UserListViewWidget(
               userList: userList!,
@@ -60,11 +68,11 @@ class _HomePageState extends State<HomePage> {
       case Status.error:
         return RefreshIndicator(
           onRefresh: () {
-            return context.read<HomeViewModel>().getUsersList();
+            return homeViewModel.getUsersList();
           },
           child: context.statusErrorHandling(
               apiResponse.message!,
-              context.read<LocalData>()
+              SharedObject.sharedObject.localData
           ),
         );
       default:

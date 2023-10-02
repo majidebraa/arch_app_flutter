@@ -1,11 +1,12 @@
 import 'package:arch_app_flutter/data/repository/user_repository.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import '../../constant/app_strings.dart';
 import '../../data/local/local_data.dart';
 import '../../data/model/user.dart';
 import '../../data/remote/api_response.dart';
 
-class HomeViewModel with ChangeNotifier{
+class HomeViewModel extends GetxController{
   final UserRepository userRepository;
   final LocalData localData;
   HomeViewModel({
@@ -13,22 +14,20 @@ class HomeViewModel with ChangeNotifier{
     required this.localData
   });
 
-  ApiResponse _apiResponse = ApiResponse.initial(AppStrings.initializing);
+  final Rx<ApiResponse> _apiResponse = ApiResponse.initial(AppStrings.initializing).obs;
 
-  ApiResponse get response {
+  Rx<ApiResponse> get response {
     return _apiResponse;
   }
 
   Future<void> getUsersList() async {
-    _apiResponse = ApiResponse.loading(AppStrings.loading);
-    notifyListeners();
+    _apiResponse.value = ApiResponse.loading(AppStrings.loading);
     try {
       List<User> userList = await userRepository.fetchUsersList();
-      _apiResponse = ApiResponse.completed(userList);
+      _apiResponse.value = ApiResponse.completed(userList);
     } catch (e) {
-      _apiResponse = ApiResponse.error(e.toString());
+      _apiResponse.value = ApiResponse.error(e.toString());
     }
-    notifyListeners();
   }
 
 

@@ -1,5 +1,6 @@
 import 'package:arch_app_flutter/data/repository/user_repository.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import '../../constant/app_strings.dart';
 import '../../data/local/local_data.dart';
 import '../../data/model/user.dart';
@@ -13,20 +14,20 @@ class DetailViewModel with ChangeNotifier{
     required this.localData
   });
 
-  ApiResponse _apiResponse = ApiResponse.initial(AppStrings.initializing);
+  final Rx<ApiResponse> _apiResponse = ApiResponse.initial(AppStrings.initializing).obs;
 
-  ApiResponse get response {
+  Rx<ApiResponse> get response {
     return _apiResponse;
   }
 
   Future<void> getUserDetail(String login) async {
-    _apiResponse = ApiResponse.loading(AppStrings.loading);
+    _apiResponse.value = ApiResponse.loading(AppStrings.loading);
     notifyListeners();
     try {
       User userDetail = await userRepository.fetchUserDetails(login);
-      _apiResponse = ApiResponse.completed(userDetail);
+      _apiResponse.value = ApiResponse.completed(userDetail);
     } catch (e) {
-      _apiResponse = ApiResponse.error(e.toString());
+      _apiResponse.value = ApiResponse.error(e.toString());
     }
     notifyListeners();
   }
