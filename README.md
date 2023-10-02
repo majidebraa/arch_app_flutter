@@ -7,4 +7,5 @@ This application implements the following concepts:
   * ViewModel
   * Provider
   * Request
+  * GetX
 
