@@ -7,5 +7,7 @@ This application implements the following concepts:
   * ViewModel
   * REST API with Request
   * Provider
-  * GetX 
+  * GetX
+  * Bloc
+  * Cubit
 
