@@ -5,12 +5,12 @@ import 'package:arch_app_flutter/core/extension/context_extension.dart';
 import 'package:arch_app_flutter/features/detail/avatar_page.dart';
 import 'package:arch_app_flutter/features/detail/row_title_value_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../constant/app_strings.dart';
 import '../../data/local/local_data.dart';
 import '../../data/model/user.dart';
 import '../../data/remote/api_response.dart';
-import 'detail_view_model.dart';
+import 'bloc/detail_bloc.dart';
 
 class DetailPage extends StatefulWidget {
   final String login;
@@ -22,12 +22,16 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateMixin {
   late User? userDetail;
+
+  Future<void> load() async {
+    context.read<DetailBloc>().add(GetUserDetailEvent(login: widget.login));
+  }
   @override
   void initState() {
     WidgetsBinding
         .instance
         .addPostFrameCallback((_){
-      context.read<DetailViewModel>().getUserDetail(widget.login);
+          load();
     });
     super.initState();
 
@@ -35,7 +39,7 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    ApiResponse apiResponse = context.watch<DetailViewModel>().response;
+    ApiResponse apiResponse = context.watch<DetailBloc>().response;
     return Scaffold(
         backgroundColor: AppColors.whiteColor,
         appBar:  const AppBarGeneralWidget(title: AppStrings.userProfile),
@@ -56,7 +60,7 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
       case Status.completed:
         return Builder(builder: (context) => RefreshIndicator(
           onRefresh: () {
-            return context.read<DetailViewModel>().getUserDetail(widget.login);
+            return load();
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -95,7 +99,7 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
       case Status.error:
         return RefreshIndicator(
           onRefresh: () {
-            return context.read<DetailViewModel>().getUserDetail(widget.login);
+            return load();
           },
           child: context.statusErrorHandling(
               apiResponse.message!,
