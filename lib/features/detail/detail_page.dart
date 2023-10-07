@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import '../../constant/app_strings.dart';
 import '../../data/model/user.dart';
 import '../../data/remote/api_response.dart';
-import '../../data/shared_object.dart';
+import '../../data/shared_instance.dart';
 import 'detail_view_model.dart';
 
 class DetailPage extends StatefulWidget {
@@ -23,8 +23,8 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateMixin {
   final DetailViewModel detailViewModel = Get.put(
       DetailViewModel(
-          userRepository: SharedObject.sharedObject.userRepository,
-          localData: SharedObject.sharedObject.localData
+          userRepository: SharedInstance.instance.userRepository,
+          localData: SharedInstance.instance.localData
       )
   );
   late User? userDetail;
@@ -105,7 +105,7 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
           },
           child: context.statusErrorHandling(
               apiResponse.message!,
-              SharedObject.sharedObject.localData
+              SharedInstance.instance.localData
           ),
         );
       default:

@@ -4,8 +4,8 @@ import 'package:arch_app_flutter/data/repository/user_repository.dart';
 
 import 'local/local_data.dart';
 
-class SharedObject{
-  static SharedObject sharedObject = SharedObject();
+class SharedInstance{
+  static SharedInstance instance = SharedInstance();
   LocalData localData = LocalData();
   late RemoteModuleImpl remoteModule =  RemoteModuleImpl(localData: localData);
   HeaderHelper headerHelper =  HeaderHelper();

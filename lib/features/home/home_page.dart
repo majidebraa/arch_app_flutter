@@ -1,7 +1,7 @@
 import 'package:arch_app_flutter/common/app_bar_main_widget.dart';
 import 'package:arch_app_flutter/constant/app_colors.dart';
 import 'package:arch_app_flutter/core/extension/context_extension.dart';
-import 'package:arch_app_flutter/data/shared_object.dart';
+import 'package:arch_app_flutter/data/shared_instance.dart';
 import 'package:arch_app_flutter/features/detail/detail_page.dart';
 import 'package:arch_app_flutter/features/home/user_list_view_widget.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +21,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final HomeViewModel homeViewModel = Get.put(
       HomeViewModel(
-          userRepository: SharedObject.sharedObject.userRepository,
-          localData: SharedObject.sharedObject.localData
+          userRepository: SharedInstance.instance.userRepository,
+          localData: SharedInstance.instance.localData
       )
   );
   List<User>? userList = [];
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
           },
           child: context.statusErrorHandling(
               apiResponse.message!,
-              SharedObject.sharedObject.localData
+              SharedInstance.instance.localData
           ),
         );
       default:
