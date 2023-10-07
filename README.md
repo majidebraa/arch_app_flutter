@@ -8,4 +8,6 @@ This application implements the following concepts:
   * REST API with Request
   * Provider
   * GetX
+  * Bloc
+  * Cubit
 
