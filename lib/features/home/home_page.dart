@@ -2,7 +2,7 @@ import 'package:arch_app_flutter/common/app_bar_main_widget.dart';
 import 'package:arch_app_flutter/constant/app_colors.dart';
 import 'package:arch_app_flutter/core/extension/context_extension.dart';
 import 'package:arch_app_flutter/features/detail/detail_page.dart';
-import 'package:arch_app_flutter/features/home/bloc/home_bloc.dart';
+import 'package:arch_app_flutter/features/home/bloc/home_cubit.dart';
 import 'package:arch_app_flutter/features/home/user_list_view_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    ApiResponse apiResponse = context.watch<HomeBloc>().response;
+    ApiResponse apiResponse = context.watch<HomeCubit>().response;
     return Scaffold(
         backgroundColor: AppColors.whiteColor,
         appBar: const AppBarMainWidget(title: AppStrings.appName,),
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
   Future<void> load() async {
-    context.read<HomeBloc>().add(const GetUsersListEvent());
+    context.read<HomeCubit>().getUsersListEvent();
   }
 
   void onUserItemClick(int position){

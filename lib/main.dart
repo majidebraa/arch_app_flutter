@@ -1,6 +1,6 @@
 import 'package:arch_app_flutter/data/repository/user_repository.dart';
-import 'package:arch_app_flutter/features/detail/bloc/detail_bloc.dart';
-import 'package:arch_app_flutter/features/home/bloc/home_bloc.dart';
+import 'package:arch_app_flutter/features/detail/bloc/detail_cubit.dart';
+import 'package:arch_app_flutter/features/home/bloc/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,11 +32,11 @@ class MyApp extends StatelessWidget {
       ),
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<HomeBloc>(
-            create: (BuildContext context) => HomeBloc(userRepository: context.read<UserRepository>()),
+          BlocProvider<HomeCubit>(
+            create: (BuildContext context) => HomeCubit(userRepository: context.read<UserRepository>()),
           ),
-          BlocProvider<DetailBloc>(
-            create: (BuildContext context) => DetailBloc(userRepository: context.read<UserRepository>()),
+          BlocProvider<DetailCubit>(
+            create: (BuildContext context) => DetailCubit(userRepository: context.read<UserRepository>()),
           ),
         ],
         child: MaterialApp(

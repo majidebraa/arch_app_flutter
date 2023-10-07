@@ -4,21 +4,18 @@ import '../../../data/model/user.dart';
 import '../../../data/remote/api_response.dart';
 import 'package:bloc/bloc.dart';
 
-part 'detail_event.dart';
 part 'detail_state.dart';
 
-class DetailBloc extends Bloc<DetailEvent,DetailState>{
-  DetailBloc({required this.userRepository}):super(
-      DetailState(apiResponse: ApiResponse.initial(AppStrings.initializing))
-  ){
-    on<GetUserDetailEvent>(getUserDetailEvent);
-  }
+class DetailCubit extends Cubit<DetailState>{
+  DetailCubit({required this.userRepository}):super(
+      DetailState(apiResponse: ApiResponse.initial(AppStrings.initializing)));
   final UserRepository userRepository;
-  Future<void> getUserDetailEvent(GetUserDetailEvent event, Emitter<DetailState> emit) async {
+
+  getUserDetailEvent({required String login}) async {
     state.apiResponse = ApiResponse.loading(AppStrings.loading);
     emit(DetailState(apiResponse: ApiResponse.loading(AppStrings.loading)));
     try {
-      User user = await userRepository.fetchUserDetails(event.login);
+      User user = await userRepository.fetchUserDetails(login);
       emit(DetailState(apiResponse: ApiResponse.completed(user)));
     } catch (e) {
       emit(DetailState(apiResponse: ApiResponse.error(e.toString())));

@@ -1,4 +1,4 @@
-part of 'detail_bloc.dart';
+part of 'detail_cubit.dart';
 
 class DetailState {
 

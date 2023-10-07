@@ -10,7 +10,7 @@ import '../../constant/app_strings.dart';
 import '../../data/local/local_data.dart';
 import '../../data/model/user.dart';
 import '../../data/remote/api_response.dart';
-import 'bloc/detail_bloc.dart';
+import 'bloc/detail_cubit.dart';
 
 class DetailPage extends StatefulWidget {
   final String login;
@@ -24,7 +24,7 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
   late User? userDetail;
 
   Future<void> load() async {
-    context.read<DetailBloc>().add(GetUserDetailEvent(login: widget.login));
+    context.read<DetailCubit>().getUserDetailEvent(login: widget.login);
   }
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _DetailPageState extends State<DetailPage> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    ApiResponse apiResponse = context.watch<DetailBloc>().response;
+    ApiResponse apiResponse = context.watch<DetailCubit>().response;
     return Scaffold(
         backgroundColor: AppColors.whiteColor,
         appBar:  const AppBarGeneralWidget(title: AppStrings.userProfile),
